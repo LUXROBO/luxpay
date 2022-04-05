@@ -77,12 +77,32 @@ type PaymentResp struct {
 const apiUrl string = "https://api.tosspayments.com/"
 const contentType string = "application/json"
 
-func GetAuthToken(tossSecret string) string {
+type Header struct {
+	Authorization string
+	ContentType   string
+}
+
+type TossClient struct {
+	apiUrl string
+	header Header
+}
+
+func NewTossClient(tossSecret string) *TossClient {
+	authToken := getAuthToken(tossSecret)
+	return &TossClient{
+		apiUrl: apiUrl,
+		header: Header{
+			Authorization: "Basic " + authToken,
+			ContentType:   contentType,
+		},
+	}
+}
+
+func getAuthToken(tossSecret string) string {
 	return base64.StdEncoding.EncodeToString([]byte(tossSecret + ":"))
 }
 
-func CreateBillingKey(
-	authToken string,
+func (tc TossClient) CreateBillingKey(
 	cardNumber string,
 	cardExpirationYear string,
 	cardExpirationMonth string,
@@ -114,8 +134,8 @@ func CreateBillingKey(
 		panic(err)
 	}
 
-	req.Header.Add("Authorization", "Basic "+authToken)
-	req.Header.Add("Content-Type", contentType)
+	req.Header.Add("Authorization", tc.header.Authorization)
+	req.Header.Add("Content-Type", tc.header.ContentType)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -129,8 +149,7 @@ func CreateBillingKey(
 	return data
 }
 
-func MakePayment(
-	authToken string,
+func (tc TossClient) MakePayment(
 	billingKey string,
 	orderName string,
 	orderId string,
@@ -158,8 +177,8 @@ func MakePayment(
 		panic(err)
 	}
 
-	req.Header.Add("Authorization", "Basic "+authToken)
-	req.Header.Add("Content-Type", contentType)
+	req.Header.Add("Authorization", tc.header.Authorization)
+	req.Header.Add("Content-Type", tc.header.ContentType)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -180,9 +199,9 @@ func main() {
 	}
 
 	tossSecret := os.Getenv("DEV_TOSS_SECRET")
-	authToken := GetAuthToken(tossSecret)
-	billingKeyResp := CreateBillingKey(
-		authToken,
+	tossClient := NewTossClient(tossSecret)
+	fmt.Println(tossClient)
+	billingKeyResp := tossClient.CreateBillingKey(
 		os.Getenv("CARD_NUMBER"),     // CARD NUMBER
 		os.Getenv("CARD_EXPR_YEAR"),  // YY
 		os.Getenv("CARD_EXPR_MONTH"), // MM
@@ -191,8 +210,7 @@ func main() {
 		"test_customer_key",          // RANDOM STRING
 	)
 	fmt.Println("BillingKeyResp:", billingKeyResp)
-	paymentResp := MakePayment(
-		authToken,
+	paymentResp := tossClient.MakePayment(
 		billingKeyResp.BillingKey,
 		"test_order_name",
 		"test_order_id",
