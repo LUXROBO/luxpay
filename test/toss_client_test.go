@@ -47,6 +47,5 @@ func TestMakePayment(t *testing.T) {
 		"1000",
 		"test_customer_key",
 	)
-	// assert.Equal(t, "DONE", paymentResp.Status, "Should be DONE")
 	assert.NotNil(t, paymentResp)
 }
