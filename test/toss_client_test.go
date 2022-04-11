@@ -42,7 +42,7 @@ func TestMakePayment(t *testing.T) {
 
 	paymentResp := tossClient.MakePayment(
 		billingKeyResp.BillingKey,
-		"test_order_name",
+		"test_order_name", // FAKE ORDER NAME
 		"test_order_id",
 		"1000",
 		"test_customer_key",
