@@ -32,11 +32,12 @@ func main() {
 	paymentResp := tossClient.MakePayment(
 		billingKeyResp.BillingKey,
 		"test_order_name",
-		"test_order_id",
+		"test_order_idx",
 		"1000",
 		"test_customer_key",
 	)
 	fmt.Println("PaymentResp:", paymentResp)
+	fmt.Println("PaymentResp.Status:", paymentResp.Status)
 
 	impKey := os.Getenv("IAMPORT_KEY")
 	impSecret := os.Getenv("IAMPORT_SECRET")
