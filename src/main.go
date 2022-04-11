@@ -50,4 +50,13 @@ func main() {
 		"2025-07",                // CARD EXPIRY (YYYY-MM)
 	)
 	fmt.Println("CustomerResp:", customerResp)
+
+	impPaymentResp := impClient.MakePayment(
+		"test_customer_uid",
+		"test_merchant_uid",
+		1000,
+		"test_payment_name",
+	)
+
+	fmt.Println("ImpPaymentResp:", impPaymentResp)
 }
