@@ -8,16 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMain(m *testing.M) {
+func setUpTossClient() *client.TossClient {
 	tossSecret := os.Getenv("DEV_TOSS_SECRET")
-	client.NewTossClient(tossSecret)
-	code := m.Run()
-	os.Exit(code)
+	tossClient := client.NewTossClient(tossSecret)
+	return tossClient
 }
 
 func TestCreateBillingKey(t *testing.T) {
-	tossSecret := os.Getenv("DEV_TOSS_SECRET")
-	tossClient := client.NewTossClient(tossSecret)
+	tossClient := setUpTossClient()
 	billingKeyResp := tossClient.CreateBillingKey(
 		os.Getenv("CARD_NUMBER"),     // CARD NUMBER
 		os.Getenv("CARD_EXPR_YEAR"),  // YY
