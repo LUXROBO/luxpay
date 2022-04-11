@@ -28,6 +28,33 @@ type AccessTokenResp struct {
 	} `json:"response"`
 }
 
+type CustomerPayload struct {
+	CustomerUid string `json:"customer_uid"`
+	CardNumber  string `json:"card_number"`
+	Expiry      string `json:"expiry"`
+}
+
+type CustomerResp struct {
+	Code     int    `json:"code"`
+	Message  string `json:"message"`
+	Response struct {
+		CustomerUid      string `json:"customer_uid"`
+		PgProvider       string `json:"pg_provider"`
+		PgId             string `json:"pg_id"`
+		CardName         string `json:"card_name"`
+		CardCode         string `json:"card_code"`
+		CardNumber       string `json:"card_number"`
+		CardType         string `json:"card_type"`
+		CustomerName     string `json:"customer_name"`
+		CustomerTel      string `json:"customer_tel"`
+		CustomerEmail    string `json:"customer_email"`
+		CustomerAddr     string `json:"customer_addr"`
+		CustomerPostcode string `json:"customer_postcode"`
+		Inserted         int    `json:"inserted"`
+		Updated          int    `json:"updated"`
+	} `json:"response"`
+}
+
 func NewIamportClient(iamportKey string, iamportSecret string) *IamportClient {
 	accessTokenStruct := getAccessToken(iamportKey, iamportSecret)
 	accessToken := accessTokenStruct.Response.AccessToken
@@ -66,6 +93,45 @@ func getAccessToken(iamportKey string, iamportSecret string) AccessTokenResp {
 	defer resp.Body.Close()
 
 	var data AccessTokenResp
+	json.NewDecoder(resp.Body).Decode(&data)
+	return data
+}
+
+func (ic IamportClient) CreateCustomer(
+	customerUid string,
+	cardNumber string,
+	expiry string,
+) CustomerResp {
+	payload := CustomerPayload{
+		CustomerUid: customerUid,
+		CardNumber:  cardNumber,
+		Expiry:      expiry,
+	}
+	jsonPayload, err := json.Marshal(payload)
+	if err != nil {
+		panic(err)
+	}
+
+	req, err := http.NewRequest(
+		"POST",
+		impApiUrl+"subscribe/customers/"+customerUid,
+		bytes.NewBuffer(jsonPayload),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	req.Header.Add("Authorization", ic.Authorization)
+	req.Header.Add("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	var data CustomerResp
 	json.NewDecoder(resp.Body).Decode(&data)
 	return data
 }

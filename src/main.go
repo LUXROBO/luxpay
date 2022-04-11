@@ -43,4 +43,11 @@ func main() {
 
 	impClient := client.NewIamportClient(impKey, impSecret)
 	fmt.Println("IamportClient:", impClient)
+
+	customerResp := impClient.CreateCustomer(
+		"test_customer_uid",      // RANDOM STRING
+		os.Getenv("CARD_NUMBER"), // CARD NUMBER
+		"2025-07",                // CARD EXPIRY (YYYY-MM)
+	)
+	fmt.Println("CustomerResp:", customerResp)
 }
