@@ -54,12 +54,12 @@ func main() {
 	)
 	fmt.Println("CustomerResp:", customerResp)
 
-	// impPaymentResp := impClient.MakePayment(
-	// 	"test_customer_uid",
-	// 	"test_merchant_uid",
-	// 	1000,
-	// 	"test_payment_name",
-	// )
+	impPaymentResp := impClient.MakePayment(
+		"test_customer_uid",
+		"test_merchant_uid",
+		1000,
+		"test_payment_name",
+	)
 
-	// fmt.Println("ImpPaymentResp:", impPaymentResp)
+	fmt.Println("ImpPaymentResp:", impPaymentResp)
 }
