@@ -49,15 +49,17 @@ func main() {
 		"test_customer_uid",      // RANDOM STRING
 		os.Getenv("CARD_NUMBER"), // CARD NUMBER
 		"2025-07",                // CARD EXPIRY (YYYY-MM)
+		"940929",                 // BIRTHDAY (YYMMDD)
+		"35",                     // PASSWORD 2 DIGITS
 	)
 	fmt.Println("CustomerResp:", customerResp)
 
-	impPaymentResp := impClient.MakePayment(
-		"test_customer_uid",
-		"test_merchant_uid",
-		1000,
-		"test_payment_name",
-	)
+	// impPaymentResp := impClient.MakePayment(
+	// 	"test_customer_uid",
+	// 	"test_merchant_uid",
+	// 	1000,
+	// 	"test_payment_name",
+	// )
 
-	fmt.Println("ImpPaymentResp:", impPaymentResp)
+	// fmt.Println("ImpPaymentResp:", impPaymentResp)
 }

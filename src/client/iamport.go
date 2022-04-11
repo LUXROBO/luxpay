@@ -32,6 +32,8 @@ type CustomerPayload struct {
 	CustomerUid string `json:"customer_uid"`
 	CardNumber  string `json:"card_number"`
 	Expiry      string `json:"expiry"`
+	Birth       string `json:"birth"`
+	Password    string `json:"password"`
 }
 
 type CustomerResp struct {
@@ -132,11 +134,15 @@ func (ic IamportClient) CreateCustomer(
 	customerUid string,
 	cardNumber string,
 	expiry string,
+	birth string,
+	password string,
 ) CustomerResp {
 	payload := CustomerPayload{
 		CustomerUid: customerUid,
 		CardNumber:  cardNumber,
 		Expiry:      expiry,
+		Birth:       birth,
+		Password:    password,
 	}
 	jsonPayload, err := json.Marshal(payload)
 	if err != nil {
