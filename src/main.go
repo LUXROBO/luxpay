@@ -37,4 +37,10 @@ func main() {
 		"test_customer_key",
 	)
 	fmt.Println("PaymentResp:", paymentResp)
+
+	impKey := os.Getenv("IAMPORT_KEY")
+	impSecret := os.Getenv("IAMPORT_SECRET")
+
+	impClient := client.NewIamportClient(impKey, impSecret)
+	fmt.Println("IamportClient:", impClient)
 }
