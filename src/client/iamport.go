@@ -33,7 +33,7 @@ type CustomerPayload struct {
 	CardNumber  string `json:"card_number"`
 	Expiry      string `json:"expiry"`
 	Birth       string `json:"birth"`
-	Password    string `json:"password"`
+	Password    string `json:"pwd_2digit"`
 }
 
 type CustomerResp struct {
