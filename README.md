@@ -7,6 +7,8 @@
 [![Github LICENSE](https://img.shields.io/github/license/luxrobo/luxpay)](https://github.com/LUXROBO/luxpay/blob/main/LICENSE)
 [![Lines of Code](https://img.shields.io/tokei/lines/github/luxrobo/luxpay)](https://github.com/LUXROBO/luxpay/tree/develop/src)
 
+</div>
+
 ## Description
 > A collection of payment functionalities written in Go
 
