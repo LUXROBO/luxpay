@@ -1,6 +1,8 @@
 package test
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"luxpay/src/client"
 	"os"
 	"testing"
@@ -32,6 +34,21 @@ func getCardInfo(t *testing.T) (string, string, string, string, string) {
 	return cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday
 }
 
+func generateRandomBytes(n int) ([]byte, error) {
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+func generateRandomString(s int) (string, error) {
+	b, err := generateRandomBytes(s)
+	return base64.URLEncoding.EncodeToString(b), err
+}
+
 func TestCreateBillingKey(t *testing.T) {
 	setUpMockEnvVars(t)
 	tossClient := setUpTossClient(t)
@@ -57,30 +74,27 @@ func TestCreateBillingKey(t *testing.T) {
 func TestMakePayment(t *testing.T) {
 	setUpMockEnvVars(t)
 	tossClient := setUpTossClient(t)
-	// cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
-	// t.Run("[Test 1]", func(t *testing.T) {
+	TestCreateBillingKey(t)
 
-	// }
-
-	// t.Run("[Test 2]", func(t *testing.T) {
-
-	// }
-
+	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
 	billingKeyResp := tossClient.CreateBillingKey(
-		os.Getenv("CARD_NUMBER"),     // CARD NUMBER
-		os.Getenv("CARD_EXPR_YEAR"),  // YY
-		os.Getenv("CARD_EXPR_MONTH"), // MM
-		os.Getenv("CARD_PASSWORD"),   // DDDD
-		os.Getenv("BIRTHDAY"),        // YYMMDD
-		"test_customer_key",          // RANDOM STRING
+		cardNumber,
+		cardExprYear,
+		cardExprMonth,
+		cardPassword,
+		birthday,
+		"test_customer_key",
 	)
 
+	// Create unique orderId in advance
+	uniqueOrderId, _ := generateRandomString(10)
 	paymentResp := tossClient.MakePayment(
 		billingKeyResp.BillingKey,
-		"test_order_name", // FAKE ORDER NAME
-		"test_order_id",
+		"test_order_name",
+		uniqueOrderId,
 		"1000",
 		"test_customer_key",
 	)
-	assert.NotNil(t, paymentResp)
+	assert.Equal(t, "DONE", paymentResp.Status)
+	assert.Equal(t, uniqueOrderId, paymentResp.OrderId)
 }
