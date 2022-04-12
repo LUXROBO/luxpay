@@ -32,9 +32,34 @@ func main() {
 	paymentResp := tossClient.MakePayment(
 		billingKeyResp.BillingKey,
 		"test_order_name",
-		"test_order_id",
+		"test_order_idx",
 		"1000",
 		"test_customer_key",
 	)
 	fmt.Println("PaymentResp:", paymentResp)
+	fmt.Println("PaymentResp.Status:", paymentResp.Status)
+
+	impKey := os.Getenv("IAMPORT_KEY")
+	impSecret := os.Getenv("IAMPORT_SECRET")
+
+	impClient := client.NewIamportClient(impKey, impSecret)
+	fmt.Println("IamportClient:", impClient)
+
+	customerResp := impClient.CreateCustomer(
+		"test_customer_uid",      // RANDOM STRING
+		os.Getenv("CARD_NUMBER"), // CARD NUMBER
+		"2025-07",                // CARD EXPIRY (YYYY-MM)
+		"940929",                 // BIRTHDAY (YYMMDD)
+		"35",                     // PASSWORD 2 DIGITS
+	)
+	fmt.Println("CustomerResp:", customerResp)
+
+	impPaymentResp := impClient.MakePayment(
+		"test_customer_uid",
+		"test_merchant_uid",
+		1000,
+		"test_payment_name",
+	)
+
+	fmt.Println("ImpPaymentResp:", impPaymentResp)
 }
