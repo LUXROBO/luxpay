@@ -17,14 +17,14 @@ jobs:
       with:
         go-version: 1.18
     - name: Build
-      run: go build -v ./test
+      run: go build -v ./...
     - name: Test
-      run: go test -v ./test
+      run: go test -v ./...
     - name: Coverage
       env:
         CODE_CLIMATE_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       run: |
-        for pkg in $(go list ./test | grep -v vendor); do
+        for pkg in $(go list ./... | grep -v vendor); do
           go test -coverprofile=$(echo $pkg | tr / -).cover $pkg
         done
         echo "mode: set" > c.out
