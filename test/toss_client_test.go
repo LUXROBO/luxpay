@@ -3,10 +3,10 @@ package test
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"luxpay/src/client"
 	"os"
 	"testing"
 
+	"github.com/luxrobo/luxpay/src/client"
 	"github.com/stretchr/testify/assert"
 )
 
