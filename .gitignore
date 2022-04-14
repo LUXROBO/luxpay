@@ -16,3 +16,6 @@
 
 # Env file
 .env
+
+# Coverage report
+coverage.html
