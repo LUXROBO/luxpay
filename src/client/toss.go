@@ -98,10 +98,10 @@ func getAuthToken(tossSecret string) string {
 	return base64.StdEncoding.EncodeToString([]byte(tossSecret + ":"))
 }
 
-func (tc TossClient) CreateBillingKey(
-	billingKeyPayload BillingKeyPayload,
+func (tc TossClient) requestWithPayload(
+	payload BillingKeyPayload,
 ) BillingKeyResp {
-	jsonPayload, err := json.Marshal(billingKeyPayload)
+	jsonPayload, err := json.Marshal(payload)
 	if err != nil {
 		panic(err)
 	}
@@ -128,6 +128,12 @@ func (tc TossClient) CreateBillingKey(
 	var data BillingKeyResp
 	json.NewDecoder(resp.Body).Decode(&data)
 	return data
+}
+
+func (tc TossClient) CreateBillingKey(
+	billingKeyPayload BillingKeyPayload,
+) BillingKeyResp {
+	return tc.requestWithPayload(billingKeyPayload)
 }
 
 func (tc TossClient) MakePayment(
