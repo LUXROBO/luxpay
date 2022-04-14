@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func setUpMockEnvVars(t *testing.T) {
+func setUpTossMockEnvVars(t *testing.T) {
 	t.Setenv("DEV_TOSS_SECRET", "test_sk_OALnQvDd2VJl2YzvdBa8Mj7X41mN")
 	t.Setenv("CARD_NUMBER", "377989730301234")
 	t.Setenv("CARD_EXPR_YEAR", "25")
@@ -50,7 +50,7 @@ func generateRandomString(s int) (string, error) {
 }
 
 func TestCreateBillingKey(t *testing.T) {
-	setUpMockEnvVars(t)
+	setUpTossMockEnvVars(t)
 	tossClient := setUpTossClient(t)
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
 	billingKeyPayload := client.BillingKeyPayload{
@@ -73,7 +73,7 @@ func TestCreateBillingKey(t *testing.T) {
 }
 
 func TestMakePayment(t *testing.T) {
-	setUpMockEnvVars(t)
+	setUpTossMockEnvVars(t)
 	tossClient := setUpTossClient(t)
 	TestCreateBillingKey(t)
 

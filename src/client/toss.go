@@ -5,11 +5,6 @@ import (
 	"encoding/json"
 )
 
-type Header struct {
-	Authorization string
-	ContentType   string
-}
-
 type TossClient struct {
 	apiUrl string
 	header Header
