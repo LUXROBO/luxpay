@@ -1,15 +1,5 @@
 package client
 
-type Header struct {
-	Authorization string
-	ContentType   string
-}
-
-type Client struct {
-	apiUrl string
-	header Header
-}
-
 type BillingKeyPayload struct {
 	CardNumber          string `json:"cardNumber"`
 	CardExpirationYear  string `json:"cardExpirationYear"`
