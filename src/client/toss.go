@@ -1,14 +1,10 @@
-package main
+package client
 
 import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"os"
-
-	"github.com/joho/godotenv"
 )
 
 type BillingKeyPayload struct {
@@ -190,32 +186,4 @@ func (tc TossClient) MakePayment(
 	var data PaymentResp
 	json.NewDecoder(resp.Body).Decode(&data)
 	return data
-}
-
-func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
-
-	tossSecret := os.Getenv("DEV_TOSS_SECRET")
-	tossClient := NewTossClient(tossSecret)
-	fmt.Println(tossClient)
-	billingKeyResp := tossClient.CreateBillingKey(
-		os.Getenv("CARD_NUMBER"),     // CARD NUMBER
-		os.Getenv("CARD_EXPR_YEAR"),  // YY
-		os.Getenv("CARD_EXPR_MONTH"), // MM
-		os.Getenv("CARD_PASSWORD"),   // DDDD
-		os.Getenv("BIRTHDAY"),        // YYMMDD
-		"test_customer_key",          // RANDOM STRING
-	)
-	fmt.Println("BillingKeyResp:", billingKeyResp)
-	paymentResp := tossClient.MakePayment(
-		billingKeyResp.BillingKey,
-		"test_order_name",
-		"test_order_id",
-		"1000",
-		"test_customer_key",
-	)
-	fmt.Println("PaymentResp:", paymentResp)
 }
