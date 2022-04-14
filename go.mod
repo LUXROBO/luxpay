@@ -1,4 +1,4 @@
-module luxpay
+module github.com/LUXROBO/luxpay
 
 go 1.18
 
