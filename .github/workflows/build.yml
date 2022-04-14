@@ -7,16 +7,19 @@ on:
     branches: [ main, develop ]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Go
-      uses: actions/setup-go@v2
+    - name: Run unit tests
+      run: |
+        make clean test-ci
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+    - name: Fmt and Lint
+      run: |
+        make lint fmt
+    - name: Commit fmt changes
+      uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        go-version: 1.18
-    - name: Build
-      run: go build -v ./...
-    - name: Test
-      run: go test -v ./...
+        commit_message: Apply fmt changes
