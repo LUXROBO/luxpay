@@ -99,24 +99,9 @@ func getAuthToken(tossSecret string) string {
 }
 
 func (tc TossClient) CreateBillingKey(
-	cardNumber string,
-	cardExpirationYear string,
-	cardExpirationMonth string,
-	cardPassword string,
-	customerBirthday string,
-	customerUid string,
+	billingKeyPayload BillingKeyPayload,
 ) BillingKeyResp {
-
-	payload := BillingKeyPayload{
-		CardNumber:          cardNumber,
-		CardExpirationYear:  cardExpirationYear,
-		CardExpirationMonth: cardExpirationMonth,
-		CardPassword:        cardPassword,
-		CustomerBirthday:    customerBirthday,
-		CustomerKey:         customerUid,
-	}
-
-	jsonPayload, err := json.Marshal(payload)
+	jsonPayload, err := json.Marshal(billingKeyPayload)
 	if err != nil {
 		panic(err)
 	}
@@ -147,19 +132,9 @@ func (tc TossClient) CreateBillingKey(
 
 func (tc TossClient) MakePayment(
 	billingKey string,
-	orderName string,
-	orderId string,
-	orderAmount string,
-	customerUid string,
+	paymentPayload PaymentPayload,
 ) PaymentResp {
-	payload := PaymentPayload{
-		OrderName:   orderName,
-		OrderId:     orderId,
-		OrderAmount: orderAmount,
-		CustomerKey: customerUid,
-	}
-
-	jsonPayload, err := json.Marshal(payload)
+	jsonPayload, err := json.Marshal(paymentPayload)
 	if err != nil {
 		panic(err)
 	}

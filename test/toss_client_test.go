@@ -53,14 +53,15 @@ func TestCreateBillingKey(t *testing.T) {
 	setUpMockEnvVars(t)
 	tossClient := setUpTossClient(t)
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
-	billingKeyResp := tossClient.CreateBillingKey(
-		cardNumber,
-		cardExprYear,
-		cardExprMonth,
-		cardPassword,
-		birthday,
-		"test_customer_key",
-	)
+	billingKeyPayload := client.BillingKeyPayload{
+		CardNumber:          cardNumber,
+		CardExpirationYear:  cardExprYear,
+		CardExpirationMonth: cardExprMonth,
+		CardPassword:        cardPassword,
+		CustomerBirthday:    birthday,
+		CustomerKey:         "test_customer_key",
+	}
+	billingKeyResp := tossClient.CreateBillingKey(billingKeyPayload)
 
 	assert.Equal(t, "tvivarepublica4", billingKeyResp.MID)
 	assert.Equal(t, "test_customer_key", billingKeyResp.CustomerKey)
@@ -77,23 +78,27 @@ func TestMakePayment(t *testing.T) {
 	TestCreateBillingKey(t)
 
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
-	billingKeyResp := tossClient.CreateBillingKey(
-		cardNumber,
-		cardExprYear,
-		cardExprMonth,
-		cardPassword,
-		birthday,
-		"test_customer_key",
-	)
+	billingKeyPayload := client.BillingKeyPayload{
+		CardNumber:          cardNumber,
+		CardExpirationYear:  cardExprYear,
+		CardExpirationMonth: cardExprMonth,
+		CardPassword:        cardPassword,
+		CustomerBirthday:    birthday,
+		CustomerKey:         "test_customer_key",
+	}
+	billingKeyResp := tossClient.CreateBillingKey(billingKeyPayload)
 
 	// Create unique orderId in advance
 	uniqueOrderId, _ := generateRandomString(10)
+	paymentPayload := client.PaymentPayload{
+		OrderName:   "test_order_name",
+		OrderId:     uniqueOrderId,
+		OrderAmount: "1000",
+		CustomerKey: "test_customer_key",
+	}
 	paymentResp := tossClient.MakePayment(
 		billingKeyResp.BillingKey,
-		"test_order_name",
-		uniqueOrderId,
-		"1000",
-		"test_customer_key",
+		paymentPayload,
 	)
 	assert.Equal(t, "DONE", paymentResp.Status)
 	assert.Equal(t, uniqueOrderId, paymentResp.OrderId)
