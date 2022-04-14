@@ -5,7 +5,7 @@ GO_TEST_OUTFILE         := ./c.out
 GOLANG_DOCKER_IMAGE     := golang:1.17
 GOLANG_DOCKER_CONTAINER := goesquerydsl-container
 CC_TEST_REPORTER_ID		:= ${CC_TEST_REPORTER_ID}
-CC_PREFIX				:= github.com/LUXROBO/luxpay
+CC_PREFIX				:= github.com/luxrobo/luxpay
 
 #   Format according to gofmt: https://github.com/cytopia/docker-gofmt
 #   Usage:
