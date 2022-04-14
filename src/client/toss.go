@@ -5,24 +5,21 @@ import (
 	"encoding/json"
 )
 
-type Header struct {
-	Authorization string
-	ContentType   string
-}
-
 type TossClient struct {
-	apiUrl string
-	header Header
+	client Client
 }
 
 func NewTossClient(tossSecret string) *TossClient {
 	authToken := getAuthToken(tossSecret)
-	return &TossClient{
+	client := Client{
 		apiUrl: "https://api.tosspayments.com/",
 		header: Header{
 			Authorization: "Basic " + authToken,
 			ContentType:   "application/json",
 		},
+	}
+	return &TossClient{
+		client: client,
 	}
 }
 
@@ -37,10 +34,9 @@ func (tc TossClient) CreateBillingKey(
 	resp := requestWithPayload(
 		jsonPayload,
 		"POST",
-		tc.apiUrl+"v1/billing/authorizations/card",
-		tc.header,
+		tc.client.apiUrl+"v1/billing/authorizations/card",
+		tc.client.header,
 	)
-
 	var billingKeyResp BillingKeyResp
 	json.NewDecoder(resp.Body).Decode(&billingKeyResp)
 	return billingKeyResp
@@ -54,10 +50,9 @@ func (tc TossClient) MakePayment(
 	resp := requestWithPayload(
 		jsonPayload,
 		"POST",
-		tc.apiUrl+"v1/billing/"+billingKey,
-		tc.header,
+		tc.client.apiUrl+"v1/billing/"+billingKey,
+		tc.client.header,
 	)
-
 	var paymentResp PaymentResp
 	json.NewDecoder(resp.Body).Decode(&paymentResp)
 	return paymentResp
