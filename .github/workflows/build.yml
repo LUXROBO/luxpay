@@ -21,14 +21,22 @@ jobs:
     - name: Test
       run: go test -v ./...
     - name: Coverage
-      uses: actions/setup-node@master
+      run: go test ./... -coverpkg=./... -coverprofile=c.out
+  coverage:
+    needs: [ build ]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@master
       with:
         node-version: '12'
     - run: npm install -g yarn
     - run: yarn install
     - run: yarn build
-      uses: paambaati/codeclimate-action@v2.2.4
+    - uses: paambaati/codeclimate-action@v3.0.0
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
-        coverageCommand: go test ./... -coverpkg=./... -coverprofile=c.out
+        coverageCommand: yarn run coverage
+        debug: true
