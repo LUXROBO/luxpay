@@ -28,7 +28,7 @@ type BillingKeyResp struct {
 
 type PaymentPayload struct {
 	OrderName   string `json:"orderName"`
-	OrderId     string `json:"orderId"`
+	OrderID     string `json:"orderId"`
 	OrderAmount string `json:"amount"`
 	CustomerKey string `json:"customerKey"`
 }
@@ -55,10 +55,10 @@ type PaymentResp struct {
 	DiscountAmount      int    `json:"discountAmount"`
 	GiftCertificate     string `json:"giftCertificate"`
 	IsPartialCancelable bool   `json:"isPartialCancelable"`
-	MId                 string `json:"mId"`
+	MID                 string `json:"mId"`
 	Method              string `json:"method"`
 	MobilePhone         string `json:"mobilePhone"`
-	OrderId             string `json:"orderId"`
+	OrderID             string `json:"orderId"`
 	PaymentKey          string `json:"paymentKey"`
 	RequestedAt         string `json:"requestedAt"`
 	Secret              string `json:"secret"`

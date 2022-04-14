@@ -88,11 +88,11 @@ func TestMakePayment(t *testing.T) {
 	}
 	billingKeyResp := tossClient.CreateBillingKey(billingKeyPayload)
 
-	// Create unique orderId in advance
-	uniqueOrderId, _ := generateRandomString(10)
+	// Create unique orderID in advance
+	uniqueOrderID, _ := generateRandomString(10)
 	paymentPayload := client.PaymentPayload{
 		OrderName:   "test_order_name",
-		OrderId:     uniqueOrderId,
+		OrderID:     uniqueOrderID,
 		OrderAmount: "1000",
 		CustomerKey: "test_customer_key",
 	}
@@ -101,5 +101,5 @@ func TestMakePayment(t *testing.T) {
 		paymentPayload,
 	)
 	assert.Equal(t, "DONE", paymentResp.Status)
-	assert.Equal(t, uniqueOrderId, paymentResp.OrderId)
+	assert.Equal(t, uniqueOrderID, paymentResp.OrderID)
 }

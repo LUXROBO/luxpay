@@ -29,7 +29,7 @@ type AccessTokenResp struct {
 }
 
 type CustomerPayload struct {
-	CustomerUid string `json:"customer_uid"`
+	CustomerUID string `json:"customer_uid"`
 	CardNumber  string `json:"card_number"`
 	Expiry      string `json:"expiry"`
 	Birth       string `json:"birth"`
@@ -40,7 +40,7 @@ type CustomerResp struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
 	Response struct {
-		CustomerUid      string `json:"customer_uid"`
+		CustomerUID      string `json:"customer_uid"`
 		PgProvider       string `json:"pg_provider"`
 		PgId             string `json:"pg_id"`
 		CardName         string `json:"card_name"`
@@ -58,7 +58,7 @@ type CustomerResp struct {
 }
 
 type MakePaymentPayload struct {
-	CustomerUid string `json:"customer_uid"`
+	CustomerUID string `json:"customer_uid"`
 	MerchantUid string `json:"merchant_uid"`
 	Amount      int    `json:"amount"`
 	Name        string `json:"name"`
@@ -131,14 +131,14 @@ func getAccessToken(iamportKey string, iamportSecret string) AccessTokenResp {
 }
 
 func (ic IamportClient) CreateCustomer(
-	customerUid string,
+	customerUID string,
 	cardNumber string,
 	expiry string,
 	birth string,
 	password string,
 ) CustomerResp {
 	payload := CustomerPayload{
-		CustomerUid: customerUid,
+		CustomerUID: customerUID,
 		CardNumber:  cardNumber,
 		Expiry:      expiry,
 		Birth:       birth,
@@ -151,7 +151,7 @@ func (ic IamportClient) CreateCustomer(
 
 	req, err := http.NewRequest(
 		"POST",
-		impApiUrl+"subscribe/customers/"+customerUid,
+		impApiUrl+"subscribe/customers/"+customerUID,
 		bytes.NewBuffer(jsonPayload),
 	)
 	if err != nil {
@@ -174,14 +174,14 @@ func (ic IamportClient) CreateCustomer(
 }
 
 func (ic IamportClient) MakePayment(
-	customerUid string,
-	merchantUid string,
+	customerUID string,
+	merchantUID string,
 	amount int,
 	paymentName string,
 ) MakePaymentResp {
 	payload := MakePaymentPayload{
-		CustomerUid: customerUid,
-		MerchantUid: merchantUid,
+		CustomerUID: customerUID,
+		MerchantUid: merchantUID,
 		Amount:      amount,
 		Name:        paymentName,
 	}
