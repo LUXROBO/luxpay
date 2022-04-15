@@ -17,7 +17,9 @@ func requestWithPayload(
 		bytes.NewBuffer(jsonPayload),
 	)
 
-	req.Header.Add("Authorization", header.Authorization)
+	if header.Authorization != "" {
+		req.Header.Add("Authorization", header.Authorization)
+	}
 	req.Header.Add("Content-Type", header.ContentType)
 
 	client := &http.Client{}

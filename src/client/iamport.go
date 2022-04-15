@@ -1,16 +1,12 @@
 package client
 
 import (
-	"bytes"
 	"encoding/json"
-	"net/http"
 )
 
-const impApiUrl string = "https://api.iamport.kr/"
-
 type IamportClient struct {
-	apiUrl        string
-	Authorization string
+	apiUrl string
+	header Header
 }
 
 type AccessTokenPayload struct {
@@ -89,127 +85,60 @@ type MakePaymentResp struct {
 }
 
 func NewIamportClient(iamportKey string, iamportSecret string) *IamportClient {
-	accessTokenStruct := getAccessToken(iamportKey, iamportSecret)
-	accessToken := accessTokenStruct.Response.AccessToken
-	return &IamportClient{
-		apiUrl:        "https://api.iamport.kr/",
-		Authorization: accessToken,
-	}
-}
-
-func getAccessToken(iamportKey string, iamportSecret string) AccessTokenResp {
-	payload := AccessTokenPayload{
+	accessTokenPayload := AccessTokenPayload{
 		ImpKey:    iamportKey,
 		ImpSecret: iamportSecret,
 	}
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		panic(err)
+	accessTokenStruct := getAccessToken(accessTokenPayload)
+	accessToken := accessTokenStruct.Response.AccessToken
+	return &IamportClient{
+		apiUrl: "https://api.iamport.kr/",
+		header: Header{
+			Authorization: accessToken,
+			ContentType:   "application/json",
+		},
 	}
+}
 
-	req, err := http.NewRequest(
+func getAccessToken(accessTokenPayload AccessTokenPayload) AccessTokenResp {
+	jsonPayload, _ := json.Marshal(accessTokenPayload)
+	resp := requestWithPayload(
+		jsonPayload,
 		"POST",
-		impApiUrl+"users/getToken",
-		bytes.NewBuffer(jsonPayload),
+		"https://api.iamport.kr/users/getToken",
+		Header{Authorization: "", ContentType: "application/json"},
 	)
-	if err != nil {
-		panic(err)
-	}
-
-	req.Header.Add("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	var data AccessTokenResp
-	json.NewDecoder(resp.Body).Decode(&data)
-	return data
+	var accessTokenResp AccessTokenResp
+	json.NewDecoder(resp.Body).Decode(&accessTokenResp)
+	return accessTokenResp
 }
 
 func (ic IamportClient) CreateCustomer(
-	customerUid string,
-	cardNumber string,
-	expiry string,
-	birth string,
-	password string,
+	customerPayload CustomerPayload,
 ) CustomerResp {
-	payload := CustomerPayload{
-		CustomerUid: customerUid,
-		CardNumber:  cardNumber,
-		Expiry:      expiry,
-		Birth:       birth,
-		Password:    password,
-	}
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		panic(err)
-	}
-
-	req, err := http.NewRequest(
+	jsonPayload, _ := json.Marshal(customerPayload)
+	resp := requestWithPayload(
+		jsonPayload,
 		"POST",
-		impApiUrl+"subscribe/customers/"+customerUid,
-		bytes.NewBuffer(jsonPayload),
+		ic.apiUrl+"subscribe/customers/"+customerPayload.CustomerUid,
+		ic.header,
 	)
-	if err != nil {
-		panic(err)
-	}
-
-	req.Header.Add("Authorization", ic.Authorization)
-	req.Header.Add("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	var data CustomerResp
-	json.NewDecoder(resp.Body).Decode(&data)
-	return data
+	var customerResp CustomerResp
+	json.NewDecoder(resp.Body).Decode(&customerResp)
+	return customerResp
 }
 
 func (ic IamportClient) MakePayment(
-	customerUid string,
-	merchantUid string,
-	amount int,
-	paymentName string,
+	makePaymentPayload MakePaymentPayload,
 ) MakePaymentResp {
-	payload := MakePaymentPayload{
-		CustomerUid: customerUid,
-		MerchantUid: merchantUid,
-		Amount:      amount,
-		Name:        paymentName,
-	}
-	jsonPayload, err := json.Marshal(payload)
-	if err != nil {
-		panic(err)
-	}
-
-	req, err := http.NewRequest(
+	jsonPayload, _ := json.Marshal(makePaymentPayload)
+	resp := requestWithPayload(
+		jsonPayload,
 		"POST",
-		impApiUrl+"subscribe/payments/again",
-		bytes.NewBuffer(jsonPayload),
+		ic.apiUrl+"subscribe/payments/again",
+		ic.header,
 	)
-	if err != nil {
-		panic(err)
-	}
-
-	req.Header.Add("Authorization", ic.Authorization)
-	req.Header.Add("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	var data MakePaymentResp
-	json.NewDecoder(resp.Body).Decode(&data)
-	return data
+	var makePaymentResp MakePaymentResp
+	json.NewDecoder(resp.Body).Decode(&makePaymentResp)
+	return makePaymentResp
 }
