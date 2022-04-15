@@ -29,7 +29,7 @@ type IamportBillingKeyResp struct {
 	Response struct {
 		CustomerUID      string `json:"customer_uid"`
 		PgProvider       string `json:"pg_provider"`
-		PgId             string `json:"pg_id"`
+		PgID             string `json:"pg_id"`
 		CardName         string `json:"card_name"`
 		CardCode         string `json:"card_code"`
 		CardNumber       string `json:"card_number"`
@@ -55,14 +55,14 @@ type IamportPaymentResp struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
 	Response struct {
-		ImpUid        string `json:"imp_uid"`
+		ImpUID        string `json:"imp_uid"`
 		MerchantUID   string `json:"merchant_uid"`
 		PayMethod     string `json:"pay_method"`
 		Channel       string `json:"channel"`
 		PgProvider    string `json:"pg_provider"`
 		EmbPgProvider string `json:"emb_pg_provider"`
-		PgTid         string `json:"pg_tid"`
-		PgId          string `json:"pg_id"`
+		PgTID         string `json:"pg_tid"`
+		PgID          string `json:"pg_id"`
 		Escrow        bool   `json:"escrow"`
 		ApplyNum      string `json:"apply_num"`
 		BankCode      string `json:"bank_code"`
