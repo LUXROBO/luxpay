@@ -1,13 +1,4 @@
-package client
-
-import (
-	"encoding/json"
-)
-
-type IamportClient struct {
-	apiUrl string
-	header Header
-}
+package iamport
 
 type AccessTokenPayload struct {
 	ImpKey    string `json:"imp_key"`
@@ -24,15 +15,15 @@ type AccessTokenResp struct {
 	} `json:"response"`
 }
 
-type CustomerPayload struct {
-	CustomerUid string `json:"customer_uid"`
+type IamportBillingKeyPayload struct {
+	CustomerUID string `json:"customer_uid"`
 	CardNumber  string `json:"card_number"`
 	Expiry      string `json:"expiry"`
 	Birth       string `json:"birth"`
 	Password    string `json:"pwd_2digit"`
 }
 
-type CustomerResp struct {
+type IamportBillingKeyResp struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
 	Response struct {
@@ -53,14 +44,14 @@ type CustomerResp struct {
 	} `json:"response"`
 }
 
-type MakePaymentPayload struct {
+type IamportPaymentPayload struct {
 	CustomerUid string `json:"customer_uid"`
 	MerchantUid string `json:"merchant_uid"`
 	Amount      int    `json:"amount"`
 	Name        string `json:"name"`
 }
 
-type MakePaymentResp struct {
+type IamportPaymentResp struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
 	Response struct {
@@ -82,63 +73,4 @@ type MakePaymentResp struct {
 		CardNumber    string `json:"card_number"`
 		CardType      string `json:"card_type"`
 	} `json:"response"`
-}
-
-func NewIamportClient(iamportKey string, iamportSecret string) *IamportClient {
-	accessTokenPayload := AccessTokenPayload{
-		ImpKey:    iamportKey,
-		ImpSecret: iamportSecret,
-	}
-	accessTokenStruct := getAccessToken(accessTokenPayload)
-	accessToken := accessTokenStruct.Response.AccessToken
-	return &IamportClient{
-		apiUrl: "https://api.iamport.kr/",
-		header: Header{
-			Authorization: accessToken,
-			ContentType:   "application/json",
-		},
-	}
-}
-
-func getAccessToken(accessTokenPayload AccessTokenPayload) AccessTokenResp {
-	jsonPayload, _ := json.Marshal(accessTokenPayload)
-	resp := requestWithPayload(
-		jsonPayload,
-		"POST",
-		"https://api.iamport.kr/users/getToken",
-		Header{Authorization: "", ContentType: "application/json"},
-	)
-	var accessTokenResp AccessTokenResp
-	json.NewDecoder(resp.Body).Decode(&accessTokenResp)
-	return accessTokenResp
-}
-
-func (ic IamportClient) CreateCustomer(
-	customerPayload CustomerPayload,
-) CustomerResp {
-	jsonPayload, _ := json.Marshal(customerPayload)
-	resp := requestWithPayload(
-		jsonPayload,
-		"POST",
-		ic.apiUrl+"subscribe/customers/"+customerPayload.CustomerUid,
-		ic.header,
-	)
-	var customerResp CustomerResp
-	json.NewDecoder(resp.Body).Decode(&customerResp)
-	return customerResp
-}
-
-func (ic IamportClient) MakePayment(
-	makePaymentPayload MakePaymentPayload,
-) MakePaymentResp {
-	jsonPayload, _ := json.Marshal(makePaymentPayload)
-	resp := requestWithPayload(
-		jsonPayload,
-		"POST",
-		ic.apiUrl+"subscribe/payments/again",
-		ic.header,
-	)
-	var makePaymentResp MakePaymentResp
-	json.NewDecoder(resp.Body).Decode(&makePaymentResp)
-	return makePaymentResp
 }

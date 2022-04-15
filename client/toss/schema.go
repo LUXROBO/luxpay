@@ -1,6 +1,6 @@
-package client
+package toss
 
-type BillingKeyPayload struct {
+type TossBillingKeyPayload struct {
 	CardNumber          string `json:"cardNumber"`
 	CardExpirationYear  string `json:"cardExpirationYear"`
 	CardExpirationMonth string `json:"cardExpirationMonth"`
@@ -9,7 +9,7 @@ type BillingKeyPayload struct {
 	CustomerKey         string `json:"customerKey"`
 }
 
-type BillingKeyResp struct {
+type TossBillingKeyResp struct {
 	MID             string `json:"mId"`
 	CustomerKey     string `json:"customerKey"`
 	AuthenticatedAt string `json:"authenticatedAt"`
@@ -19,14 +19,14 @@ type BillingKeyResp struct {
 	Number          string `json:"cardNumber"`
 }
 
-type PaymentPayload struct {
+type TossPaymentPayload struct {
 	OrderName   string `json:"orderName"`
 	OrderID     string `json:"orderId"`
 	OrderAmount string `json:"amount"`
 	CustomerKey string `json:"customerKey"`
 }
 
-type PaymentResp struct {
+type TossPaymentResp struct {
 	ApprovedAt    string `json:"approvedAt"`
 	BalanceAmount string `json:"balanceAmount"`
 	Cancels       string `json:"cancels"`

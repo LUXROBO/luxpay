@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/luxrobo/luxpay/src/client"
+	"github.com/luxrobo/luxpay/client/toss"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,9 +19,9 @@ func setUpTossMockEnvVars(t *testing.T) {
 	t.Setenv("BIRTHDAY", "990101")
 }
 
-func setUpTossClient(t *testing.T) *client.TossClient {
+func setUpTossClient(t *testing.T) *toss.TossClient {
 	tossSecret := os.Getenv("DEV_TOSS_SECRET")
-	tossClient := client.NewTossClient(tossSecret)
+	tossClient := toss.NewTossClient(tossSecret)
 	return tossClient
 }
 
@@ -53,7 +53,7 @@ func TestCreateBillingKey(t *testing.T) {
 	setUpTossMockEnvVars(t)
 	tossClient := setUpTossClient(t)
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
-	billingKeyPayload := client.BillingKeyPayload{
+	billingKeyPayload := toss.TossBillingKeyPayload{
 		CardNumber:          cardNumber,
 		CardExpirationYear:  cardExprYear,
 		CardExpirationMonth: cardExprMonth,
@@ -61,7 +61,8 @@ func TestCreateBillingKey(t *testing.T) {
 		CustomerBirthday:    birthday,
 		CustomerKey:         "test_customer_key",
 	}
-	billingKeyResp := tossClient.CreateBillingKey(billingKeyPayload)
+	billingKeyRespInterface := tossClient.CreateBillingKey(billingKeyPayload)
+	billingKeyResp := billingKeyRespInterface.(toss.TossBillingKeyResp)
 
 	assert.Equal(t, "tvivarepublica4", billingKeyResp.MID)
 	assert.Equal(t, "test_customer_key", billingKeyResp.CustomerKey)
@@ -78,7 +79,7 @@ func TestMakePayment(t *testing.T) {
 	TestCreateBillingKey(t)
 
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
-	billingKeyPayload := client.BillingKeyPayload{
+	billingKeyPayload := toss.TossBillingKeyPayload{
 		CardNumber:          cardNumber,
 		CardExpirationYear:  cardExprYear,
 		CardExpirationMonth: cardExprMonth,
@@ -86,20 +87,22 @@ func TestMakePayment(t *testing.T) {
 		CustomerBirthday:    birthday,
 		CustomerKey:         "test_customer_key",
 	}
-	billingKeyResp := tossClient.CreateBillingKey(billingKeyPayload)
+	billingKeyRespInterface := tossClient.CreateBillingKey(billingKeyPayload)
+	billingKeyResp := billingKeyRespInterface.(toss.TossBillingKeyResp)
 
 	// Create unique orderID in advance
 	uniqueOrderID, _ := generateRandomString(10)
-	paymentPayload := client.PaymentPayload{
+	paymentPayload := toss.TossPaymentPayload{
 		OrderName:   "test_order_name",
 		OrderID:     uniqueOrderID,
 		OrderAmount: "1000",
 		CustomerKey: "test_customer_key",
 	}
-	paymentResp := tossClient.MakePayment(
+	paymentRespInterface := tossClient.MakePayment(
 		billingKeyResp.BillingKey,
 		paymentPayload,
 	)
+	paymentResp := paymentRespInterface.(toss.TossPaymentResp)
 	assert.Equal(t, "DONE", paymentResp.Status)
 	assert.Equal(t, uniqueOrderID, paymentResp.OrderID)
 }
