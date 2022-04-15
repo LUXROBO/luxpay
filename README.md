@@ -25,7 +25,7 @@ go get github.com/luxrobo/luxpay
 ```
 
 ## Usage
-```
+```go
 // TossClient Usage Example
 tossClient := client.NewTossClient(tossSecret)
 billingKeyResp := tossClient.CreateBillingKey(billingKeyPayload)
