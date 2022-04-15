@@ -1,8 +1,6 @@
 package test
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"os"
 	"testing"
 
@@ -19,39 +17,15 @@ func setUpTossMockEnvVars(t *testing.T) {
 	t.Setenv("BIRTHDAY", "990101")
 }
 
-func setUpTossClient(t *testing.T) *toss.TossClient {
+func setUpTossClient() *toss.TossClient {
 	tossSecret := os.Getenv("DEV_TOSS_SECRET")
 	tossClient := toss.NewTossClient(tossSecret)
 	return tossClient
 }
 
-func getCardInfo(t *testing.T) (string, string, string, string, string) {
-	cardNumber := os.Getenv("CARD_NUMBER")
-	cardExprYear := os.Getenv("CARD_EXPR_YEAR")
-	cardExprMonth := os.Getenv("CARD_EXPR_MONTH")
-	cardPassword := os.Getenv("CARD_PASSWORD")
-	birthday := os.Getenv("BIRTHDAY")
-	return cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday
-}
-
-func generateRandomBytes(n int) ([]byte, error) {
-	b := make([]byte, n)
-	_, err := rand.Read(b)
-	if err != nil {
-		return nil, err
-	}
-
-	return b, nil
-}
-
-func generateRandomString(s int) (string, error) {
-	b, err := generateRandomBytes(s)
-	return base64.URLEncoding.EncodeToString(b), err
-}
-
-func TestCreateBillingKey(t *testing.T) {
+func TestTossCreateBillingKey(t *testing.T) {
 	setUpTossMockEnvVars(t)
-	tossClient := setUpTossClient(t)
+	tossClient := setUpTossClient()
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
 	billingKeyPayload := toss.TossBillingKeyPayload{
 		CardNumber:          cardNumber,
@@ -73,10 +47,10 @@ func TestCreateBillingKey(t *testing.T) {
 	assert.Equal(t, "377989******234", billingKeyResp.Number)
 }
 
-func TestMakePayment(t *testing.T) {
+func TestTossMakePayment(t *testing.T) {
 	setUpTossMockEnvVars(t)
-	tossClient := setUpTossClient(t)
-	TestCreateBillingKey(t)
+	tossClient := setUpTossClient()
+	TestTossCreateBillingKey(t)
 
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
 	billingKeyPayload := toss.TossBillingKeyPayload{
