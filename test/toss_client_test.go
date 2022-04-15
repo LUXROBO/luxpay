@@ -50,7 +50,6 @@ func TestTossCreateBillingKey(t *testing.T) {
 func TestTossMakePayment(t *testing.T) {
 	setUpTossMockEnvVars(t)
 	tossClient := setUpTossClient()
-	TestTossCreateBillingKey(t)
 
 	cardNumber, cardExprYear, cardExprMonth, cardPassword, birthday := getCardInfo(t)
 	billingKeyPayload := toss.TossBillingKeyPayload{
