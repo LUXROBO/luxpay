@@ -7,7 +7,7 @@ import (
 )
 
 type IamportClient struct {
-	apiUrl string
+	apiURL string
 	header client.Header
 }
 
@@ -19,7 +19,7 @@ func NewIamportClient(iamportKey string, iamportSecret string) *IamportClient {
 	accessTokenStruct := getAccessToken(accessTokenPayload)
 	accessToken := accessTokenStruct.Response.AccessToken
 	iamportClient := &IamportClient{
-		apiUrl: "https://api.iamport.kr/",
+		apiURL: "https://api.iamport.kr/",
 		header: client.Header{
 			Authorization: accessToken,
 			ContentType:   "application/json",
@@ -49,7 +49,7 @@ func (ic IamportClient) CreateBillingKey(
 	resp := client.RequestWithPayload(
 		jsonPayload,
 		"POST",
-		ic.apiUrl+"subscribe/customers/"+payload.CustomerUID,
+		ic.apiURL+"subscribe/customers/"+payload.CustomerUID,
 		ic.header,
 	)
 	var iamportBillingKeyResp IamportBillingKeyResp
@@ -66,7 +66,7 @@ func (ic IamportClient) MakePayment(
 	resp := client.RequestWithPayload(
 		jsonPayload,
 		"POST",
-		ic.apiUrl+"subscribe/payments/again",
+		ic.apiURL+"subscribe/payments/again",
 		ic.header,
 	)
 	var iamportPaymentResp IamportPaymentResp
