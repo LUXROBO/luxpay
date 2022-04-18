@@ -18,3 +18,17 @@
 - Implement Iamport and Toss Client as a backend
 - Subscription payment functions
 - Self-certification via Iamport
+
+## Installation
+```bash
+go get github.com/luxrobo/luxpay
+```
+
+## Usage
+```go
+// IamportClient Example
+iamportClient := client.NewIamportClient(iamportKey, iamportSecret)
+billingKeyResp := iamportClient.CreateBillingKey(billingKeyPayload)
+paymentResp := iamportClient.MakePayment(paymentPayload)
+fmt.Println("paymentResp.Status:", paymentResp.Status)
+```

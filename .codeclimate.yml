@@ -1,0 +1,50 @@
+version: '2'
+checks:
+  argument-count:
+    enabled: true
+  complex-logic:
+    enabled: true
+  file-lines:
+    enabled: true
+  method-complexity:
+    enabled: true
+  method-count:
+    enabled: true
+  method-lines:
+    enabled: true
+  nested-control-flow:
+    enabled: true
+  return-statements:
+    enabled: true
+  similar-code:
+    enabled: true
+  identical-code:
+    enabled: true
+plugins:
+  fixme:
+    enabled: true
+    config:
+      strings:
+        - FIXME
+        - TODO
+  golint:
+    enabled: true
+    checks:
+      GoLint/Naming/PackageNames:
+        enabled: false
+      GoLint/Naming/MixedCaps:
+        enabled: false
+  govet:
+    enabled: true
+  gofmt:
+    enabled: true
+exclude_patterns:
+  - '**/.*'
+  - '**/Makefile/*'
+  - 'go.*'
+  - 'github.secrets'
+  - '**/_test.go'
+  - '**/Dockerfile'
+  - 'README.md'
+  - 'cov.out'
+  - '.DS_Store'
