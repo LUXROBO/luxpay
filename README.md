@@ -26,17 +26,9 @@ go get github.com/luxrobo/luxpay
 
 ## Usage
 ```go
-// TossClient Usage Example
-tossClient := client.NewTossClient(tossSecret)
-billingKeyResp := tossClient.CreateBillingKey(billingKeyPayload)
-billingKey := billingKeyResp.BillingKey
-paymentResp := tossClient.MakePayment(billingKey, paymentPayload)
-fmt.Println("paymentResp.Status:", paymentResp.Status)
-
-// IamportClient Usage Example
+// IamportClient Example
 iamportClient := client.NewIamportClient(iamportKey, iamportSecret)
 billingKeyResp := iamportClient.CreateBillingKey(billingKeyPayload)
-billingKey := billingKeyResp.BillingKey
-paymentResp := iamportClient.MakePayment(billingKey, paymentPayload)
+paymentResp := iamportClient.MakePayment(paymentPayload)
 fmt.Println("paymentResp.Status:", paymentResp.Status)
 ```
