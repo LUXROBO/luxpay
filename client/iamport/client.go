@@ -1,8 +1,6 @@
 package iamport
 
 import (
-	"encoding/json"
-
 	"github.com/luxrobo/luxpay/client"
 )
 
@@ -31,15 +29,14 @@ func NewIamportClient(iamportKey string, iamportSecret string) *IamportClient {
 }
 
 func getAccessToken(accessTokenPayload AccessTokenPayload) AccessTokenResp {
-	jsonPayload, _ := json.Marshal(accessTokenPayload)
-	resp := client.RequestWithPayload(
-		jsonPayload,
+	var accessTokenResp AccessTokenResp
+	client.RequestWithPayload(
+		accessTokenPayload,
+		&accessTokenResp,
 		"POST",
 		"https://api.iamport.kr/users/getToken",
 		client.Header{Authorization: "", ContentType: "application/json"},
 	)
-	var accessTokenResp AccessTokenResp
-	json.NewDecoder(resp.Body).Decode(&accessTokenResp)
 	return accessTokenResp
 }
 
@@ -47,32 +44,29 @@ func getAccessToken(accessTokenPayload AccessTokenPayload) AccessTokenResp {
 func (ic IamportClient) CreateBillingKey(
 	billingKeyPayload interface{},
 ) interface{} {
+	var billingKeyResp IamportBillingKeyResp
 	payload := billingKeyPayload.(IamportBillingKeyPayload)
-	jsonPayload, _ := json.Marshal(payload)
-	resp := client.RequestWithPayload(
-		jsonPayload,
+	client.RequestWithPayload(
+		billingKeyPayload,
+		&billingKeyResp,
 		"POST",
 		ic.apiURL+"subscribe/customers/"+payload.CustomerUID,
 		ic.header,
 	)
-	var iamportBillingKeyResp IamportBillingKeyResp
-	json.NewDecoder(resp.Body).Decode(&iamportBillingKeyResp)
-	return iamportBillingKeyResp
+	return billingKeyResp
 }
 
 // MakePayment makes a onetime payment using an issued billing key
 func (ic IamportClient) MakePayment(
 	paymentPayload interface{},
 ) interface{} {
-	payload := paymentPayload.(IamportPaymentPayload)
-	jsonPayload, _ := json.Marshal(payload)
-	resp := client.RequestWithPayload(
-		jsonPayload,
+	var paymentResp IamportPaymentResp
+	client.RequestWithPayload(
+		paymentPayload,
+		&paymentResp,
 		"POST",
 		ic.apiURL+"subscribe/payments/again",
 		ic.header,
 	)
-	var iamportPaymentResp IamportPaymentResp
-	json.NewDecoder(resp.Body).Decode(&iamportPaymentResp)
-	return iamportPaymentResp
+	return paymentResp
 }

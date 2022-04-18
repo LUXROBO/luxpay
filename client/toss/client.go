@@ -2,7 +2,6 @@ package toss
 
 import (
 	"encoding/base64"
-	"encoding/json"
 
 	"github.com/luxrobo/luxpay/client"
 )
@@ -41,16 +40,14 @@ func getAuthToken(tossSecret string) string {
 func (tc TossClient) CreateBillingKey(
 	billingKeyPayload interface{},
 ) interface{} {
-	payload := billingKeyPayload.(TossBillingKeyPayload)
-	jsonPayload, _ := json.Marshal(payload)
-	resp := client.RequestWithPayload(
-		jsonPayload,
+	var billingKeyResp TossBillingKeyResp
+	client.RequestWithPayload(
+		billingKeyPayload,
+		&billingKeyResp,
 		"POST",
 		tc.apiURL+"v1/billing/authorizations/card",
 		tc.header,
 	)
-	var billingKeyResp TossBillingKeyResp
-	json.NewDecoder(resp.Body).Decode(&billingKeyResp)
 	return billingKeyResp
 }
 
@@ -58,15 +55,13 @@ func (tc TossClient) CreateBillingKey(
 func (tc TossClient) MakePayment(
 	paymentPayload interface{},
 ) interface{} {
-	payload := paymentPayload.(TossPaymentPayload)
-	jsonPayload, _ := json.Marshal(payload)
-	resp := client.RequestWithPayload(
-		jsonPayload,
+	var paymentResp TossPaymentResp
+	client.RequestWithPayload(
+		paymentPayload,
+		&paymentResp,
 		"POST",
 		tc.apiURL+"v1/billing/"+*tc.billingKey,
 		tc.header,
 	)
-	var paymentResp TossPaymentResp
-	json.NewDecoder(resp.Body).Decode(&paymentResp)
 	return paymentResp
 }

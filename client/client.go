@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 )
 
@@ -19,11 +20,13 @@ type Header struct {
 
 // RequestWithPayload makes request with a given payload
 func RequestWithPayload(
-	jsonPayload []byte,
+	payload interface{},
+	response interface{},
 	httpMethod string,
 	apiEndPoint string,
 	header Header,
-) *http.Response {
+) interface{} {
+	jsonPayload, _ := json.Marshal(payload)
 	req, _ := http.NewRequest(
 		httpMethod,
 		apiEndPoint,
@@ -37,5 +40,7 @@ func RequestWithPayload(
 
 	client := &http.Client{}
 	resp, _ := client.Do(req)
-	return resp
+
+	json.NewDecoder(resp.Body).Decode(response)
+	return response
 }
