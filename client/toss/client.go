@@ -7,11 +7,13 @@ import (
 	"github.com/luxrobo/luxpay/client"
 )
 
+// TossClient is a client for toss API
 type TossClient struct {
 	apiURL string
 	header client.Header
 }
 
+// NewTossClient creates a new TossClient
 func NewTossClient(tossSecret string) *TossClient {
 	authToken := getAuthToken(tossSecret)
 	tossClient := &TossClient{
@@ -28,6 +30,7 @@ func getAuthToken(tossSecret string) string {
 	return base64.StdEncoding.EncodeToString([]byte(tossSecret + ":"))
 }
 
+// CreateBillingKey requests a billing key
 func (tc TossClient) CreateBillingKey(
 	billingKeyPayload interface{},
 ) interface{} {
@@ -44,6 +47,7 @@ func (tc TossClient) CreateBillingKey(
 	return billingKeyResp
 }
 
+// MakePayment makes a onetime payment using an issued billing key
 func (tc TossClient) MakePayment(
 	billingKey string,
 	paymentPayload interface{},

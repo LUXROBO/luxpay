@@ -1,10 +1,12 @@
 package iamport
 
+// AccessTokenPayload is a request body for access token request
 type AccessTokenPayload struct {
 	ImpKey    string `json:"imp_key"`
 	ImpSecret string `json:"imp_secret"`
 }
 
+// AccessTokenResp is a response body for access token request
 type AccessTokenResp struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
@@ -15,6 +17,7 @@ type AccessTokenResp struct {
 	} `json:"response"`
 }
 
+// IamportBillingKeyPayload is a request body for creating a billing kay
 type IamportBillingKeyPayload struct {
 	CustomerUID string `json:"customer_uid"`
 	CardNumber  string `json:"card_number"`
@@ -23,6 +26,7 @@ type IamportBillingKeyPayload struct {
 	Password    string `json:"pwd_2digit"`
 }
 
+// IamportBillingKeyResp is a response body for creating a billing kay
 type IamportBillingKeyResp struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`
@@ -44,6 +48,7 @@ type IamportBillingKeyResp struct {
 	} `json:"response"`
 }
 
+// IamportPaymentPayload is a request body for creating a payment
 type IamportPaymentPayload struct {
 	CustomerUID string `json:"customer_uid"`
 	MerchantUID string `json:"merchant_uid"`
@@ -51,6 +56,7 @@ type IamportPaymentPayload struct {
 	Name        string `json:"name"`
 }
 
+// IamportPaymentResp is a response body for creating a payment
 type IamportPaymentResp struct {
 	Code     int    `json:"code"`
 	Message  string `json:"message"`

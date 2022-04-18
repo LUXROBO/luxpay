@@ -6,11 +6,13 @@ import (
 	"github.com/luxrobo/luxpay/client"
 )
 
+// IamportClient is a client for iamport API
 type IamportClient struct {
 	apiURL string
 	header client.Header
 }
 
+// NewIamportClient creates a new IamportClient
 func NewIamportClient(iamportKey string, iamportSecret string) *IamportClient {
 	accessTokenPayload := AccessTokenPayload{
 		ImpKey:    iamportKey,
@@ -41,6 +43,7 @@ func getAccessToken(accessTokenPayload AccessTokenPayload) AccessTokenResp {
 	return accessTokenResp
 }
 
+// CreateBillingKey requests a billing key
 func (ic IamportClient) CreateBillingKey(
 	billingKeyPayload interface{},
 ) interface{} {
@@ -57,6 +60,7 @@ func (ic IamportClient) CreateBillingKey(
 	return iamportBillingKeyResp
 }
 
+// MakePayment makes a onetime payment using an issued billing key
 func (ic IamportClient) MakePayment(
 	billingKey string,
 	paymentPayload interface{},

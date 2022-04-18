@@ -1,5 +1,6 @@
 package toss
 
+// TossBillingKeyPayload is a request body for creating a billing key
 type TossBillingKeyPayload struct {
 	CardNumber          string `json:"cardNumber"`
 	CardExpirationYear  string `json:"cardExpirationYear"`
@@ -9,6 +10,7 @@ type TossBillingKeyPayload struct {
 	CustomerKey         string `json:"customerKey"`
 }
 
+// TossBillingKeyResp is a response body for creating a billing key
 type TossBillingKeyResp struct {
 	MID             string `json:"mId"`
 	CustomerKey     string `json:"customerKey"`
@@ -19,6 +21,7 @@ type TossBillingKeyResp struct {
 	Number          string `json:"cardNumber"`
 }
 
+// TossPaymentPayload is a request body for making a payment
 type TossPaymentPayload struct {
 	OrderName   string `json:"orderName"`
 	OrderID     string `json:"orderId"`
@@ -26,6 +29,7 @@ type TossPaymentPayload struct {
 	CustomerKey string `json:"customerKey"`
 }
 
+// TossPaymentResp is a response body for making a payment
 type TossPaymentResp struct {
 	ApprovedAt    string `json:"approvedAt"`
 	BalanceAmount string `json:"balanceAmount"`
@@ -39,7 +43,7 @@ type TossPaymentResp struct {
 		IsInterestFree        bool   `json:"isInterestFree"`
 		CardNumber            string `json:"number"`
 		OwnerType             string `json:"ownerType"`
-		ReceiptUrl            string `json:"receiptUrl"`
+		ReceiptURL            string `json:"receiptUrl"`
 		UseCardPoint          bool   `json:"useCardPoint"`
 	} `json:"card"`
 	CashReceipt         string `json:"cashReceipt"`
