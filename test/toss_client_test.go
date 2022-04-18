@@ -62,7 +62,7 @@ func TestTossMakePayment(t *testing.T) {
 	}
 	billingKeyRespInterface := tossClient.CreateBillingKey(billingKeyPayload)
 	billingKeyResp := billingKeyRespInterface.(toss.TossBillingKeyResp)
-	tossClient.BillingKey = &billingKeyResp.BillingKey
+	tossClient.SetBillingKey(billingKeyResp.BillingKey)
 
 	// Create unique orderID in advance
 	uniqueOrderID, _ := generateRandomString(10)
