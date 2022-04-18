@@ -18,25 +18,31 @@ type Header struct {
 	ContentType   string
 }
 
+// HTTPInfo includes http information of request instance
+type HTTPInfo struct {
+	Method string
+	URL    string
+	Header Header
+}
+
 // RequestWithPayload makes request with a given payload
 func RequestWithPayload(
 	payload interface{},
 	response interface{},
-	httpMethod string,
-	apiEndPoint string,
-	header Header,
+	httpInfo HTTPInfo,
 ) interface{} {
 	jsonPayload, _ := json.Marshal(payload)
 	req, _ := http.NewRequest(
-		httpMethod,
-		apiEndPoint,
+		httpInfo.Method,
+		httpInfo.URL,
 		bytes.NewBuffer(jsonPayload),
 	)
 
-	if header.Authorization != "" {
-		req.Header.Add("Authorization", header.Authorization)
+	httpHeader := httpInfo.Header
+	if httpHeader.Authorization != "" {
+		req.Header.Add("Authorization", httpHeader.Authorization)
 	}
-	req.Header.Add("Content-Type", header.ContentType)
+	req.Header.Add("Content-Type", httpHeader.ContentType)
 
 	client := &http.Client{}
 	resp, _ := client.Do(req)

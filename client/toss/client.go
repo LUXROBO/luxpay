@@ -41,12 +41,15 @@ func (tc TossClient) CreateBillingKey(
 	billingKeyPayload interface{},
 ) interface{} {
 	var billingKeyResp TossBillingKeyResp
+	httpInfo := client.HTTPInfo{
+		Method: "POST",
+		URL:    tc.apiURL + "v1/billing/authorizations/card",
+		Header: tc.header,
+	}
 	client.RequestWithPayload(
 		billingKeyPayload,
 		&billingKeyResp,
-		"POST",
-		tc.apiURL+"v1/billing/authorizations/card",
-		tc.header,
+		httpInfo,
 	)
 	return billingKeyResp
 }
@@ -56,12 +59,15 @@ func (tc TossClient) MakePayment(
 	paymentPayload interface{},
 ) interface{} {
 	var paymentResp TossPaymentResp
+	httpInfo := client.HTTPInfo{
+		Method: "POST",
+		URL:    tc.apiURL + "v1/billing/" + *tc.billingKey,
+		Header: tc.header,
+	}
 	client.RequestWithPayload(
 		paymentPayload,
 		&paymentResp,
-		"POST",
-		tc.apiURL+"v1/billing/"+*tc.billingKey,
-		tc.header,
+		httpInfo,
 	)
 	return paymentResp
 }

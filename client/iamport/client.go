@@ -30,12 +30,18 @@ func NewIamportClient(iamportKey string, iamportSecret string) *IamportClient {
 
 func getAccessToken(accessTokenPayload AccessTokenPayload) AccessTokenResp {
 	var accessTokenResp AccessTokenResp
+	httpInfo := client.HTTPInfo{
+		Method: "POST",
+		URL:    "https://api.iamport.kr/users/getToken",
+		Header: client.Header{
+			Authorization: "",
+			ContentType:   "application/json",
+		},
+	}
 	client.RequestWithPayload(
 		accessTokenPayload,
 		&accessTokenResp,
-		"POST",
-		"https://api.iamport.kr/users/getToken",
-		client.Header{Authorization: "", ContentType: "application/json"},
+		httpInfo,
 	)
 	return accessTokenResp
 }
@@ -46,12 +52,15 @@ func (ic IamportClient) CreateBillingKey(
 ) interface{} {
 	var billingKeyResp IamportBillingKeyResp
 	payload := billingKeyPayload.(IamportBillingKeyPayload)
+	httpInfo := client.HTTPInfo{
+		Method: "POST",
+		URL:    ic.apiURL + "subscribe/customers/" + payload.CustomerUID,
+		Header: ic.header,
+	}
 	client.RequestWithPayload(
 		billingKeyPayload,
 		&billingKeyResp,
-		"POST",
-		ic.apiURL+"subscribe/customers/"+payload.CustomerUID,
-		ic.header,
+		httpInfo,
 	)
 	return billingKeyResp
 }
@@ -61,12 +70,15 @@ func (ic IamportClient) MakePayment(
 	paymentPayload interface{},
 ) interface{} {
 	var paymentResp IamportPaymentResp
+	httpInfo := client.HTTPInfo{
+		Method: "POST",
+		URL:    ic.apiURL + "subscribe/payments/again",
+		Header: ic.header,
+	}
 	client.RequestWithPayload(
 		paymentPayload,
 		&paymentResp,
-		"POST",
-		ic.apiURL+"subscribe/payments/again",
-		ic.header,
+		httpInfo,
 	)
 	return paymentResp
 }
