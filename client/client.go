@@ -5,16 +5,19 @@ import (
 	"net/http"
 )
 
+// Client wraps child clients such as IamportClient
 type Client interface {
 	CreateBillingKey(billingKeyPayload interface{}) interface{}
 	MakePayment(billingKey string, paymentPayload interface{}) interface{}
 }
 
+// Header includes header information of request instance
 type Header struct {
 	Authorization string
 	ContentType   string
 }
 
+// RequestWithPayload makes request with a given payload
 func RequestWithPayload(
 	jsonPayload []byte,
 	httpMethod string,
