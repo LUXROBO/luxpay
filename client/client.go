@@ -36,14 +36,3 @@ func RequestWithPayload(
 	resp, _ := client.Do(req)
 	return resp
 }
-
-// func NewClient(pgService string, keys ...string) Client {
-// 	var client Client
-// 	switch pgService {
-// 	case "toss":
-// 		client = toss.NewTossClient(keys[0])
-// 	case "iamport":
-// 		client = iamport.NewIamportClient(keys[0], keys[1])
-// 	}
-// 	return client
-// }
