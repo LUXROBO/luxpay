@@ -10,12 +10,12 @@ import (
 type TossClient struct {
 	apiURL     string
 	header     client.Header
-	billingKey *string
+	billingKey string
 }
 
 // SetBillingKey sets a billing key to a given tossClient
 func (tc *TossClient) SetBillingKey(billingKey string) {
-	tc.billingKey = &billingKey
+	tc.billingKey = billingKey
 }
 
 // NewTossClient creates a new TossClient
@@ -60,7 +60,7 @@ func (tc TossClient) MakePayment(
 	var paymentResp TossPaymentResp
 	httpInfo := client.HTTPInfo{
 		Method: "POST",
-		URL:    tc.apiURL + "v1/billing/" + *tc.billingKey,
+		URL:    tc.apiURL + "v1/billing/" + tc.billingKey,
 		Header: tc.header,
 	}
 	client.RequestWithPayload(
