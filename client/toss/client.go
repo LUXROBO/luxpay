@@ -27,7 +27,6 @@ func NewTossClient(tossSecret string) *TossClient {
 			Authorization: "Basic " + authToken,
 			ContentType:   "application/json",
 		},
-		billingKey: nil,
 	}
 	return tossClient
 }
