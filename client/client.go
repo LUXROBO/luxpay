@@ -8,7 +8,7 @@ import (
 // Client wraps child clients such as IamportClient
 type Client interface {
 	CreateBillingKey(billingKeyPayload interface{}) interface{}
-	MakePayment(billingKey string, paymentPayload interface{}) interface{}
+	MakePayment(paymentPayload interface{}) interface{}
 }
 
 // Header includes header information of request instance

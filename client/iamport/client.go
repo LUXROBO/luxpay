@@ -62,7 +62,6 @@ func (ic IamportClient) CreateBillingKey(
 
 // MakePayment makes a onetime payment using an issued billing key
 func (ic IamportClient) MakePayment(
-	billingKey string,
 	paymentPayload interface{},
 ) interface{} {
 	payload := paymentPayload.(IamportPaymentPayload)

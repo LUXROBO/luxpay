@@ -9,8 +9,9 @@ import (
 
 // TossClient is a client for toss API
 type TossClient struct {
-	apiURL string
-	header client.Header
+	apiURL     string
+	header     client.Header
+	BillingKey *string
 }
 
 // NewTossClient creates a new TossClient
@@ -22,6 +23,7 @@ func NewTossClient(tossSecret string) *TossClient {
 			Authorization: "Basic " + authToken,
 			ContentType:   "application/json",
 		},
+		BillingKey: nil,
 	}
 	return tossClient
 }
@@ -49,7 +51,6 @@ func (tc TossClient) CreateBillingKey(
 
 // MakePayment makes a onetime payment using an issued billing key
 func (tc TossClient) MakePayment(
-	billingKey string,
 	paymentPayload interface{},
 ) interface{} {
 	payload := paymentPayload.(TossPaymentPayload)
@@ -57,7 +58,7 @@ func (tc TossClient) MakePayment(
 	resp := client.RequestWithPayload(
 		jsonPayload,
 		"POST",
-		tc.apiURL+"v1/billing/"+billingKey,
+		tc.apiURL+"v1/billing/"+*tc.BillingKey,
 		tc.header,
 	)
 	var paymentResp TossPaymentResp

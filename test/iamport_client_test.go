@@ -57,7 +57,7 @@ func TestIamportMakePayment(t *testing.T) {
 		Name:        "test_payment_name",
 	}
 	paymentRespInterface := iamportClient.MakePayment(
-		"", paymentPayload,
+		paymentPayload,
 	)
 	paymentResp := paymentRespInterface.(iamport.IamportPaymentResp)
 
